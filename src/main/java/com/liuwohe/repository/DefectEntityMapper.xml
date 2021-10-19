@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuwohe.repository.DefectEntityMapper">
+  <resultMap id="BaseResultMap" type="com.liuwohe.entity.DefectEntity">
+    <id column="defect_id" jdbcType="VARCHAR" property="defectId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="image" jdbcType="VARCHAR" property="image" />
+    <result column="defect_msg" jdbcType="VARCHAR" property="defectMsg" />
+    <result column="urgently" jdbcType="INTEGER" property="urgently" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    defect_id, user_id, phone, date, area_id, location, image, defect_msg, urgently, 
+    status
+  </sql>
+
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuwohe.repository.EmpEntityMapper">
+  <resultMap id="BaseResultMap" type="com.liuwohe.entity.EmpEntity">
+    <id column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="user_role" jdbcType="VARCHAR" property="userRole" />
+    <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    user_id, user_role, area_id, username, phone
+  </sql>
+
+</mapper>
