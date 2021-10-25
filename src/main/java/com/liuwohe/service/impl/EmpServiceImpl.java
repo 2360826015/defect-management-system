@@ -1,9 +1,12 @@
 package com.liuwohe.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.liuwohe.entity.AreasEntity;
 import com.liuwohe.entity.EmpEntity;
 import com.liuwohe.entity.Result;
+import com.liuwohe.repository.AreasEntityMapper;
 import com.liuwohe.repository.EmpEntityMapper;
+import com.liuwohe.service.AreaService;
 import com.liuwohe.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,8 @@ public class EmpServiceImpl implements EmpService {
 
     @Autowired
     EmpEntityMapper empMapper;
+    @Autowired
+    AreasEntityMapper areasMapper;
 
    /* 根据登录名和密码进行验证,用户名为username，密码为phone*/
     @Override
@@ -44,6 +49,10 @@ public class EmpServiceImpl implements EmpService {
     //根据传入的id返回员工信息
     @Override
     public EmpEntity getUserById(String id) {
-        return empMapper.selectById(id);
+        QueryWrapper<Object> qw = new QueryWrapper<>();
+        EmpEntity emp = empMapper.selectById(id);
+        AreasEntity area = areasMapper.selectById(emp.getAreaId());
+        emp.setArea(area);
+        return emp;
     }
 }

@@ -7,17 +7,25 @@ import com.liuwohe.entity.Result;
 import com.liuwohe.repository.DefectEntityMapper;
 import com.liuwohe.repository.EmpEntityMapper;
 import com.liuwohe.service.DefectService;
+import com.liuwohe.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
+@SuppressWarnings("ALL")
 public class DefectServiceImpl implements DefectService {
 
     @Autowired
     EmpEntityMapper empMapper;
+    @Autowired
+    EmpService empService;
     @Autowired
     DefectEntityMapper defectMapper;
 
@@ -39,7 +47,9 @@ public class DefectServiceImpl implements DefectService {
             result.setCode("200");
             result.setMsg("获取缺陷表成功");
 //            插入查询条件,状态为待审核时,审核人员可见
-            qw.eq("status","待审核");
+            qw.eq("status","待审核")
+                    .or()
+                    .eq("status","已出单");
             result.setData(defect.selectList(qw));
             return result;
         }else if("inspection".equals(emp.getUserRole())){
@@ -47,7 +57,9 @@ public class DefectServiceImpl implements DefectService {
             result.setMsg("获取已保存记录成功");
 //            QueryWrapper<Object> qw = new QueryWrapper<>();
 //           插入查询条件,状态为已保存时,巡检人员可见
-            qw.eq("status","已保存");
+            qw.eq("status","已保存")
+                    .or()
+                    .eq("status","已驳回");
             result.setData(defect.selectList(qw));
             return result;
         }
@@ -56,10 +68,21 @@ public class DefectServiceImpl implements DefectService {
         return result;
     }
 
-    //添加并保存一条缺陷记录
+    //[巡检人员]添加并保存一条缺陷记录
     @Override
-    public Result addorEditDefect(DefectEntity def) {
-        System.out.println(def);
+    public Result addorEditDefect(DefectEntity def, MultipartFile file) throws IOException {
+        //保存图片的路径
+        String filePath = "D:\\javaProject\\defect-management-system\\src\\main\\resources\\images";
+        //获取原始图片的拓展名
+        String originalFilename = file.getOriginalFilename();
+        int i = originalFilename.lastIndexOf(".");
+//        从.开始截取获得后缀名
+        String suffix= originalFilename.substring(i);
+        //新的文件名字
+        String newFileName = UUID.randomUUID() + suffix;
+        //封装上传文件位置的全路径
+        File targetFile = new File(filePath, newFileName);
+
         //对传入的数据进行校验
         if(def.getAreaId() == null||def.getAreaId().trim().length()<=0){
             result.setMsg("所巡检的区域不能空");
@@ -70,11 +93,18 @@ public class DefectServiceImpl implements DefectService {
             result.setCode("400");
             return result;
         }
-        else if(def.getPhone()==null||def.getPhone().length()!=11){
+        else if(def.getPhone()==null||def.getPhone().length()!=11) {
             result.setMsg("请检查电话号码格式");
             result.setCode("400");
             return result;
+        }else if(!".png".equals(suffix)&&!".jpg".equals(suffix)){
+            result.setMsg("图片格式错误，请上传jpg或者png格式图片");
+            result.setCode("400");
+            return result;
         }
+        //把本地文件上传到封装上传文件位置的全路径
+        file.transferTo(targetFile);
+        def.setImage(newFileName);
         //判断缺陷编号是否为空，为空则进入添加方法，否则进入编辑方法
         if(def.getDefectId()!=null&&def.getDefectId().trim().length()>0){
 //            执行数据更新
@@ -91,7 +121,7 @@ public class DefectServiceImpl implements DefectService {
         return result;
     }
 
-    //传入defect_id删除当前缺陷数据
+    //[巡检人员]传入defect_id删除当前缺陷数据
     @Override
     public Result delDefect(DefectEntity def) {
         defectMapper.deleteById(def.getDefectId());
@@ -99,15 +129,52 @@ public class DefectServiceImpl implements DefectService {
         result.setMsg("删除成功！！");
         return result;
     }
-    //传入要发送的缺陷列表
+
+
+    //[巡检人员]传入要发送的缺陷
     @Override
-    public Result sendDefect(List<DefectEntity> lDefect) {
-        lDefect.forEach(d->{
-            d.setStatus("待审核");
-            defectMapper.updateById(d);
-        });
+    public Result sendDefect(DefectEntity def) {
+        def.setStatus("待审核");
+        defectMapper.updateById(def);
         result.setCode("200");
         result.setMsg("发送成功");
+        return result;
+    }
+
+
+//    跳转到已保存的缺陷修改页面时返回当前缺陷数据
+    @Override
+    public Result getDefectById(String id) {
+        DefectEntity defect= defectMapper.selectById(id);
+        //调用empservice的查询方法，根据id查询员工数据。
+        EmpEntity emp = empService.getUserById(defect.getUserId());
+        defect.setEmp(emp);
+        result.setCode("200");
+        result.setMsg("获取数据成功");
+        result.setData(defect);
+        return result;
+    }
+
+
+    //[审核人员]评定缺陷紧急程度，通过缺陷审核
+    @Override
+    public Result censorDefect(DefectEntity def) {
+        if(def.getUrgently() == null){
+            result.setCode("400");
+            result.setMsg("请选择紧急程度");
+            return result;
+            //如果传入的状态码是0则执行驳回，否则通过审核
+        }else if("0".equals(def.getStatus())){
+            def.setStatus("已驳回");
+            defectMapper.updateById(def);
+            result.setCode("200");
+            result.setMsg("审核不通过！");
+            return result;
+        }
+        def.setStatus("已出单");
+        defectMapper.updateById(def);
+        result.setCode("200");
+        result.setMsg("审核通过！");
         return result;
     }
 
