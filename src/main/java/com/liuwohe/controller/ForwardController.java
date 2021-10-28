@@ -50,8 +50,12 @@ public class ForwardController {
     @GetMapping("/edit/{id}")
     public ModelAndView toDefectEditPage(@PathVariable("id") String id,ModelAndView modelAndView){
         Result result = defectService.getDefectById(id);
-        System.out.println("结果输出"+result);
+        System.out.println("结果输出"+result.getMsg());
         modelAndView.addObject("success",result);
+        if ("获取待审核数据成功".equals(result.getMsg())){
+            modelAndView.setViewName("edit-censor");
+            return modelAndView;
+        }
         modelAndView.setViewName("edit");
         return modelAndView;
     }

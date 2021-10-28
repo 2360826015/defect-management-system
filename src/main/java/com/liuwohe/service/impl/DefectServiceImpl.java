@@ -39,7 +39,7 @@ public class DefectServiceImpl implements DefectService {
     //使用工具实体类存放返回信息
     Result result = new Result();
     //保存图片的路径
-    String filePath = "D:\\javaProject\\defect-management-system\\src\\main\\resources\\static\\assets\\images";
+    String filePath = "E:\\JavaProject\\defect-management-system\\src\\main\\resources\\static\\assets\\images";
 
     //传入使用者id验证是否为审核人员或者巡检人员返回缺陷列表数据
     @Override
@@ -47,10 +47,11 @@ public class DefectServiceImpl implements DefectService {
         Result result = new Result();
 //        根据id查询数据库
         EmpEntity emp = empMapper.selectById(id);
+//        System.out.println("查询后传入用户数据"+emp);
         //如果用户角色为审核人员,则返回对应数据,否则返回失败提示
         if("censor".equals(emp.getUserRole())){
             result.setCode("200");
-            result.setMsg("获取缺陷表成功");
+            result.setMsg("获取待审核缺陷记录成功");
 //            插入查询条件,状态为待审核时,审核人员可见
             qw.eq("status","待审核")
                     .or()
@@ -182,12 +183,19 @@ public class DefectServiceImpl implements DefectService {
 //    跳转到已保存的缺陷修改页面时返回当前缺陷数据
     @Override
     public Result getDefectById(String id) {
+        //查询缺陷单数据并返回
         DefectEntity defect= defectMapper.selectById(id);
         //调用empservice的查询方法，根据id查询员工数据。
         EmpEntity emp = empService.getUserById(defect.getUserId());
         defect.setEmp(emp);
+        if("待审核".equals(defect.getStatus())){
+            result.setCode("200");
+            result.setMsg("获取待审核数据成功");
+            result.setData(defect);
+            return result;
+        }
         result.setCode("200");
-        result.setMsg("获取数据成功");
+        result.setMsg("获取已保存数据成功");
         result.setData(defect);
         return result;
     }
