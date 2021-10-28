@@ -29,38 +29,49 @@ public class InspectionController {
      public ModelAndView defect(@PathVariable("id") String id, ModelAndView modelAndView){
         //获取缺陷列表，返回result结果信息
         Result result = defectService.getDefectList(id);
+        System.out.println(result);
         modelAndView.addObject("result",result);
         //封装返回用户数据
         Result rest=new Result();
         EmpEntity user = empService.getUserById(id);
         rest.setData(user);
+        System.out.println(rest);
         modelAndView.addObject("success",rest);
-        modelAndView.setViewName("tab-panel");
+        modelAndView.setViewName("table-inspection");
         return modelAndView;
     }
 
     //缺陷添加
     @PostMapping("/defect")
-    public Result addDefect(DefectEntity def,@RequestParam("pic") MultipartFile file) throws IOException {
-        return  defectService.addorEditDefect(def,file);
+    @ResponseBody
+    public Result addDefect(DefectEntity def,@RequestParam("filepath") MultipartFile defImage) throws IOException {
+        Result result = defectService.addorEditDefect(def, defImage);
+        System.out.println(result);
+        return result;
     }
 
     //缺陷修改页面（已保存\待复检）
     @PutMapping("/defect")
-    public Result editDefect(DefectEntity def,@RequestParam("pic") MultipartFile file) throws IOException {
-        return defectService.addorEditDefect(def,file);
+    @ResponseBody
+    public Result editDefect(DefectEntity def,@RequestParam("filepath") MultipartFile defImage) throws IOException {
+        System.out.println("文件名"+defImage.getOriginalFilename());
+        return defectService.addorEditDefect(def,defImage);
     }
 
-    //缺陷记录删除(待完成：同时删除上传的图片文件)
-    @DeleteMapping("/defect")
-    public Result deletDefect(DefectEntity def){
-        return defectService.delDefect(def);
+    //缺陷记录删除(同时删除上传的图片文件)
+    @DeleteMapping("/defect/{id}")
+    @ResponseBody
+    public Result deletDefect(@PathVariable("id") String id){
+        System.out.println("获取id:"+id);
+        return defectService.delDefect(id);
     }
 
     //提交缺陷报告到审核处
-    @PostMapping("/send")
-    public Result sendDefect(DefectEntity def){
-        return defectService.sendDefect(def);
+    @PostMapping("/send/{id}")
+    @ResponseBody
+    public Result sendDefect(@PathVariable("id") String id){
+        System.out.println("缺陷报告单id"+id);
+        return defectService.sendDefect(id);
     }
 
 }

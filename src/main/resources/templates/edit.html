@@ -1,55 +1,55 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-      <meta charset="utf-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Free Bootstrap Admin Template : Dream</title>
-	<!-- Bootstrap Styles-->
+    <!-- Bootstrap Styles-->
     <link th:href="@{/assets/css/bootstrap.css}" rel="stylesheet" />
     <!-- FontAwesome Styles-->
     <link th:href="@{/assets/css/font-awesome.css}" rel="stylesheet" />
     <!-- Custom Styles-->
     <link th:href="@{/assets/css/custom-styles.css}" rel="stylesheet" />
-     <!-- Google Fonts-->
+    <!-- Google Fonts-->
     <link th:href="@{http://fonts.googleapis.com/css?family=Open+Sans}" rel='stylesheet' type='text/css' />
     <style>
         #getLocation {width:500px; height: 280px; }
     </style>
 </head>
 <body>
-    <div id="wrapper">
-        <div th:replace="/bar::topbar" ></div>
-        <!--/. NAV TOP  -->
-        <div th:replace="/bar::sidebar"></div>
-        <!-- /. NAV SIDE  -->
-        <div id="page-wrapper" >
-            <div id="page-inner">
-			 <div class="row">
-                    <div class="col-md-12">
-                        <h1 class="page-header">
-                            缺陷问题填报单<small>Upload the defect.</small>
-                        </h1>
-                    </div>
-                </div> 
-                 <!-- /. ROW  -->
-              <div class="row">
+<div id="wrapper">
+<!--    <div th:replace="/bar::topbar" ></div>-->
+<!--    &lt;!&ndash;/. NAV TOP  &ndash;&gt;-->
+<!--    <div th:replace="/bar::sidebar"></div>-->
+    <!-- /. NAV SIDE  -->
+    <div id="page-wrapper" >
+        <div id="page-inner">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="page-header">
+                        缺陷问题表单修改<small>Upload the defect.</small>
+                    </h1>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            表单信息填报
+                            表单信息修改
                         </div>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <form id="deform" enctype="multipart/form-data" >
+                                        <input hidden name="defectId" th:value="${success.data.defectId}">
                                         <div class="form-group">
                                             <label for="disabledSelect">缺陷填报人</label>
-                                            <input class="form-control" id="userId" name="userId" type="text" th:value="${success.getData().username}" readonly>
+                                            <input class="form-control" id="userId" name="userId" type="text" th:value="${success.data.emp.username}" readonly>
                                         </div>
                                         <div class="form-group">
                                             <label>联系电话</label>
-                                            <input class="form-control" value="" name="phone" placeholder="请输入联系电话">
-<!--                                            <p class="help-block">Example block-level help text here.</p>-->
+                                            <input class="form-control" value="" name="phone" th:value="${success.data.phone}">
+                                            <!--                                            <p class="help-block">Example block-level help text here.</p>-->
                                         </div>
                                         <div class="form-group">
                                             <label for="disabledSelect">缺陷填报日期</label>
@@ -57,22 +57,25 @@
                                         </div>
                                         <div class="form-group">
                                             <label>巡检所属区域</label>
-                                            <input class="form-control" id="areaId" name="areaId" th:value="${success.getData().area.areaName}" readonly>
+                                            <input class="form-control" id="areaId" name="areaId" th:value="${success.data.emp.area.areaName}" readonly>
                                         </div>
                                         <div class="form-group">
                                             <label>详细定位<small>（如定位不准确请手动选择位置）</small></label>
                                             <div id="getLocation"></div>
                                             <br>
-                                            <input class="form-control" id="location" name="location" placeholder="" readonly>
+                                            <input class="form-control" id="location" name="location" value="" placeholder="" readonly>
                                             <input type="text" readonly="true" id="lnglat" hidden="hidden">
                                         </div>
                                         <div class="form-group">
                                             <label>现场图片上传</label>
                                             <input id="image" name="filepath" type="file">
+                                            <div>
+                                                <img width="200px" height="120px" th:src="@{/images/}+${success.data.image}">
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label>缺陷问题详细描述</label>
-                                            <textarea name="defectMsg" value="" class="form-control" rows="3"></textarea>
+                                            <textarea name="defectMsg" th:text="${success.data.defectMsg}" class="form-control" rows="3"></textarea>
                                         </div>
                                         <button id="subtn" type="button"  class="btn btn-default">保存</button>
                                         <button disabled class="btn btn-default">提交</button>
@@ -155,99 +158,101 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
-			<footer><p>All right reserved. Template by: <a href="http://webthemez.com">WebThemez</a></p></footer>
-			</div>
-             <!-- /. PAGE INNER  -->
-            </div>
-         <!-- /. PAGE WRAPPER  -->
+            <footer><p>All right reserved. Template by: <a href="http://webthemez.com">WebThemez</a></p></footer>
         </div>
-     <!-- /. WRAPPER  -->
-    <!-- JS Scripts-->
-    <!-- jQuery Js -->
-    <script th:src="@{/assets/js/jquery-1.10.2.js}"></script>
-    <!-- Bootstrap Js -->
-    <script th:src="@{/assets/js/bootstrap.min.js}"></script>
-    <!-- Metis Menu Js -->
-    <script th:src="@{/assets/js/jquery.metisMenu.js}"></script>
-      <!-- Custom Js -->
-    <script th:src="@{/assets/js/custom-scripts.js}"></script>
+        <!-- /. PAGE INNER  -->
+    </div>
+    <!-- /. PAGE WRAPPER  -->
+</div>
+<!-- /. WRAPPER  -->
+<!-- JS Scripts-->
+<!-- jQuery Js -->
+<script th:src="@{/assets/js/jquery-1.10.2.js}"></script>
+<!-- Bootstrap Js -->
+<script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<!-- Metis Menu Js -->
+<script th:src="@{/assets/js/jquery.metisMenu.js}"></script>
+<!-- Custom Js -->
+<script th:src="@{/assets/js/custom-scripts.js}"></script>
 
-    <script type="text/javascript" th:inline="javascript">
-        $("#subtn").click(function (){
-            //将编号赋值给输入框
-            $("#userId").val([[${success.getData.userId}]])
-            $("#areaId").val([[${success.getData.area.areaId}]])
-            $.ajax({
-                url: '/user/inspection/defect',
-                type: 'post',
-                data: new FormData($('#deform')[0]),
-                processData: false,
-                contentType: false,
-                success: function (res) {
-                    console.log(res.code);
-                    if(res.code==="200"){
-                        alert(res.msg);
-                        window.location.href ="http://localhost:8080/user/inspection/index"+"/"+[[${success.getData.userId}]];
-                    }else{
-                        alert(res.msg);
-                    }
+<script type="text/javascript" th:inline="javascript">
+    $("#subtn").click(function (){
+        //将编号赋值给输入框
+        $("#userId").val([[${success.getData().userId}]])
+        $("#areaId").val([[${success.getData().areaId}]])
+        $.ajax({
+            url: '/user/inspection/defect',
+            type: 'put',
+            data: new FormData($('#deform')[0]),
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                console.log(res.code);
+                if(res.code==="200"){
+                    alert(res.msg);
+                    window.location.href ="http://localhost:8080/user/inspection"+"/"+[[${success.getData().userId}]];
+                }else{
+                    alert(res.msg);
                 }
-            })
+            }
         })
-    </script>
-    <script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=ba4801465b4503a22aa8c81d0fc067d1&plugin=AMap.Geocoder"></script>
-    <script type="text/javascript" >
-        // 地图初始化应该在地图容器div已经添加到DOM树之后
-        const map = new AMap.Map('getLocation', {
-            zoom: 12,
-        });
-        // mapObj = new AMap.Map('getLocation');
-        map.plugin('AMap.Geolocation', function () {
-            geolocation = new AMap.Geolocation({
-                enableHighAccuracy: true,//是否使用高精度定位，默认:true
-                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
-                maximumAge: 0,           //定位结果缓存0毫秒，默认：0
-                convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
-                showButton: true,        //显示定位按钮，默认：true
-                buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
-                buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-                showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
-                showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
-                panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
-                zoomToAccuracy:true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-            });
-            map.addControl(geolocation);
-            geolocation.getCurrentPosition(function(status,result){
-                if(status==="complete"){
-                    lnglatXY = [result.position.getLng(),result.position.getLat()]; //已知点坐标
-                    regeocoder(lnglatXY);
-                    //点击获取位置
-                    map.on('click', function(e) {
-                        var a=document.getElementById("lnglat").value = e.lnglat.getLng() + ',' + e.lnglat.getLat()
-                        lnglatXY = [e.lnglat.getLng(),e.lnglat.getLat()];
-                        regeocoder(lnglatXY);
-                    });
+    })
+</script>
 
-                    function regeocoder(loc) {  //逆地理编码
-                        var geocoder = new AMap.Geocoder({
-                            radius: 1000,
-                            extensions: "all"
-                        });
-                        geocoder.getAddress(loc, function(status, result) {
-                            if (status === 'complete' && result.info === 'OK') {
-                                geocoder_CallBack(result);
-                            }
-                        });
-                    }
-                    function geocoder_CallBack(data) {
-                        var address = data.regeocode.formattedAddress; //返回地址描述
-                        console.log(address);
-                        $("#location").val(address);
-                    }
-                }
-                console.log(result.info);
-            });
+
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=ba4801465b4503a22aa8c81d0fc067d1&plugin=AMap.Geocoder"></script>
+<script type="text/javascript" >
+    // 地图初始化应该在地图容器div已经添加到DOM树之后
+    const map = new AMap.Map('getLocation', {
+        zoom: 12,
+    });
+    // mapObj = new AMap.Map('getLocation');
+    map.plugin('AMap.Geolocation', function () {
+        geolocation = new AMap.Geolocation({
+            enableHighAccuracy: true,//是否使用高精度定位，默认:true
+            timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+            maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+            convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+            showButton: true,        //显示定位按钮，默认：true
+            buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
+            buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+            showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
+            showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
+            panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
+            zoomToAccuracy:true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
         });
-    </script>
+        map.addControl(geolocation);
+        geolocation.getCurrentPosition(function(status,result){
+            if(status==="complete"){
+                lnglatXY = [result.position.getLng(),result.position.getLat()]; //已知点坐标
+                regeocoder(lnglatXY);
+                //点击获取位置
+                map.on('click', function(e) {
+                    var a=document.getElementById("lnglat").value = e.lnglat.getLng() + ',' + e.lnglat.getLat()
+                    lnglatXY = [e.lnglat.getLng(),e.lnglat.getLat()];
+                    regeocoder(lnglatXY);
+                });
+
+                function regeocoder(loc) {  //逆地理编码
+                    var geocoder = new AMap.Geocoder({
+                        radius: 1000,
+                        extensions: "all"
+                    });
+                    geocoder.getAddress(loc, function(status, result) {
+                        if (status === 'complete' && result.info === 'OK') {
+                            geocoder_CallBack(result);
+                        }
+                    });
+                }
+                function geocoder_CallBack(data) {
+                    var address = data.regeocode.formattedAddress; //返回地址描述
+                    console.log(address);
+                    $("#location").val(address);
+                }
+            }
+            console.log(result.info);
+        });
+    });
+</script>
 </body>
 </html>

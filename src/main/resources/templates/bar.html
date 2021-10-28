@@ -244,13 +244,16 @@
                     <a th:if="${success.getData().userRole}==''"  th:href="@{/user/inspection/index/}+${success.getData().userId}"><i class="fa fa-dashboard"></i> 数据总览</a>
                 </li>
                 <li>
-                    <a th:if="${success.getData.userRole}=='censor'" th:href="@{/user/inspection/}+${success.getData().userId}"><i class="fa fa-qrcode"></i>缺陷管理</a>
+                    <a th:if="${success.getData().userRole}=='censor'" th:href="@{/user/inspection/}+${success.getData().userId}"><i class="fa fa-qrcode"></i>已审核缺陷管理</a>
                 </li>
                 <li>
-                    <a th:href="@{/user/censor/}+${success.getData().userId}"><i class="fa fa-table"></i> 缺陷列表</a>
+                    <a th:if="${success.getData().userRole}=='censor'" th:href="@{/user/censor/}+${success.getData().userId}"><i class="fa fa-table"></i> 待审核缺陷列表</a>
                 </li>
                 <li>
-                    <a th:if="${success.getData.userRole}=='inspection'" th:href="@{/user/inspection/defect/}+${success.getData().userId}"><i class="fa fa-edit"></i> 缺陷填报 </a>
+                    <a th:if="${success.getData().userRole}=='inspection'" th:href="@{/user/inspection/}+${success.getData().userId}"><i class="fa fa-table"></i> 已保存缺陷列表</a>
+                </li>
+                <li>
+                    <a th:if="${success.getData().userRole}=='inspection'" th:href="@{/user/inspection/defect/}+${success.getData().userId}"><i class="fa fa-edit"></i> 缺陷填报 </a>
                 </li>
             </ul>
 

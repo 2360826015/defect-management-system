@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 import java.io.Serializable;
@@ -22,6 +23,7 @@ public class DefectEntity extends Model<DefectEntity> implements Serializable {
 
     private String phone;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm" )
     private Date date;
 
     private String areaId;
@@ -36,6 +38,10 @@ public class DefectEntity extends Model<DefectEntity> implements Serializable {
 
     private String status;
 
+    //维护员工表
     @TableField(exist = false)
     private EmpEntity emp;
+    //维护区域表
+    @TableField(exist = false)
+    private AreasEntity area;
 }

@@ -8,15 +8,21 @@ spring:
     password: root
 #    开启隐藏请求方法，使用RESTful风格的接口
   mvc:
+    # 映射resource.static下文件，使之可以通过url地址直接访问
+#    static-path-pattern: /**
     hiddenmethod:
       filter:
         enabled: true
+
   servlet:
     multipart:
       max-file-size: 200MB
       max-request-size: 200MB
   thymeleaf:
     cache: false
+
+
+
 
 #  开启mybatis查询日志
 mybatis-plus:

@@ -47,8 +47,12 @@ public class ForwardController {
         return modelAndView;
     }
     //跳转到缺陷记录编辑页面（已保存\已驳回），根据缺陷报告的id返回数据
-    @GetMapping("/edit")
-    public Result toDefectEditPage(String id){
-        return defectService.getDefectById(id);
+    @GetMapping("/edit/{id}")
+    public ModelAndView toDefectEditPage(@PathVariable("id") String id,ModelAndView modelAndView){
+        Result result = defectService.getDefectById(id);
+        System.out.println("结果输出"+result);
+        modelAndView.addObject("success",result);
+        modelAndView.setViewName("edit");
+        return modelAndView;
     }
 }

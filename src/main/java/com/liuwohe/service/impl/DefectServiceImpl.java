@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.liuwohe.entity.DefectEntity;
 import com.liuwohe.entity.EmpEntity;
 import com.liuwohe.entity.Result;
+import com.liuwohe.repository.AreasEntityMapper;
 import com.liuwohe.repository.DefectEntityMapper;
 import com.liuwohe.repository.EmpEntityMapper;
 import com.liuwohe.service.DefectService;
@@ -25,6 +26,8 @@ public class DefectServiceImpl implements DefectService {
     @Autowired
     EmpEntityMapper empMapper;
     @Autowired
+    AreasEntityMapper areasMapper;
+    @Autowired
     EmpService empService;
     @Autowired
     DefectEntityMapper defectMapper;
@@ -35,6 +38,8 @@ public class DefectServiceImpl implements DefectService {
     DefectEntity defect = new DefectEntity();
     //使用工具实体类存放返回信息
     Result result = new Result();
+    //保存图片的路径
+    String filePath = "D:\\javaProject\\defect-management-system\\src\\main\\resources\\static\\assets\\images";
 
     //传入使用者id验证是否为审核人员或者巡检人员返回缺陷列表数据
     @Override
@@ -50,7 +55,12 @@ public class DefectServiceImpl implements DefectService {
             qw.eq("status","待审核")
                     .or()
                     .eq("status","已出单");
-            result.setData(defect.selectList(qw));
+            List<DefectEntity> defList = defect.selectList(qw);
+            //遍历存入员工数据、地区数据
+            defList.forEach(d->{
+                d.setEmp(empService.getUserById(d.getUserId()));
+            });
+            result.setData(defList);
             return result;
         }else if("inspection".equals(emp.getUserRole())){
             result.setCode("200");
@@ -60,7 +70,12 @@ public class DefectServiceImpl implements DefectService {
             qw.eq("status","已保存")
                     .or()
                     .eq("status","已驳回");
-            result.setData(defect.selectList(qw));
+            List<DefectEntity> defList = defect.selectList(qw);
+            //遍历存入员工数据、地区数据
+            defList.forEach(d->{
+                d.setEmp(empService.getUserById(d.getUserId()));
+            });
+            result.setData(defList);
             return result;
         }
         result.setCode("400");
@@ -70,18 +85,30 @@ public class DefectServiceImpl implements DefectService {
 
     //[巡检人员]添加并保存一条缺陷记录
     @Override
-    public Result addorEditDefect(DefectEntity def, MultipartFile file) throws IOException {
-        //保存图片的路径
-        String filePath = "D:\\javaProject\\defect-management-system\\src\\main\\resources\\images";
-        //获取原始图片的拓展名
-        String originalFilename = file.getOriginalFilename();
-        int i = originalFilename.lastIndexOf(".");
+    public Result addorEditDefect(DefectEntity def, MultipartFile defImage) throws IOException {
+//        判断是否上传图片
+        if(!defImage.isEmpty()){
+
+            //获取原始图片的拓展名
+            String originalFilename = defImage.getOriginalFilename();
+            int i = originalFilename.lastIndexOf(".");
 //        从.开始截取获得后缀名
-        String suffix= originalFilename.substring(i);
-        //新的文件名字
-        String newFileName = UUID.randomUUID() + suffix;
-        //封装上传文件位置的全路径
-        File targetFile = new File(filePath, newFileName);
+            String suffix= originalFilename.substring(i);
+            //新的文件名字
+            String newFileName = UUID.randomUUID() + suffix;
+            //封装上传文件位置的全路径
+            File targetFile = new File(filePath, newFileName);
+
+            if(!".png".equals(suffix)&&!".jpg".equals(suffix)){
+                result.setMsg("图片格式错误，请上传jpg或者png格式图片");
+                result.setCode("400");
+                return result;
+            }
+
+            //把本地文件上传到封装上传文件位置的全路径
+            defImage.transferTo(targetFile);
+            def.setImage(newFileName);
+        }
 
         //对传入的数据进行校验
         if(def.getAreaId() == null||def.getAreaId().trim().length()<=0){
@@ -92,19 +119,15 @@ public class DefectServiceImpl implements DefectService {
             result.setMsg("请填报当前区域是否完成巡检");
             result.setCode("400");
             return result;
-        }
-        else if(def.getPhone()==null||def.getPhone().length()!=11) {
+        } else if(def.getPhone().trim().length()!=11) {
             result.setMsg("请检查电话号码格式");
             result.setCode("400");
             return result;
-        }else if(!".png".equals(suffix)&&!".jpg".equals(suffix)){
-            result.setMsg("图片格式错误，请上传jpg或者png格式图片");
+        }else if(def.getDefectMsg().trim().length()<=0){
+            result.setMsg("请描述缺陷问题情况");
             result.setCode("400");
             return result;
         }
-        //把本地文件上传到封装上传文件位置的全路径
-        file.transferTo(targetFile);
-        def.setImage(newFileName);
         //判断缺陷编号是否为空，为空则进入添加方法，否则进入编辑方法
         if(def.getDefectId()!=null&&def.getDefectId().trim().length()>0){
 //            执行数据更新
@@ -123,8 +146,21 @@ public class DefectServiceImpl implements DefectService {
 
     //[巡检人员]传入defect_id删除当前缺陷数据
     @Override
-    public Result delDefect(DefectEntity def) {
-        defectMapper.deleteById(def.getDefectId());
+    public Result delDefect(String id) {
+        DefectEntity def = defectMapper.selectById(id);
+        File file = new File(filePath +"\\"+ def.getImage());
+        System.out.println("file"+file);
+        if (file.exists() && file.isFile()) {
+            if (file.delete()) {
+                System.out.println("删除单个文件" + def.getImage() + "成功！");
+                return result;
+            } else {
+                System.out.println("删除单个文件" + def.getImage() + "失败！");
+                return result;
+            }
+        }
+        System.out.println("删除单个文件失败：" + def.getImage() + "不存在！");
+        defectMapper.deleteById(id);
         result.setCode("200");
         result.setMsg("删除成功！！");
         return result;
@@ -133,7 +169,8 @@ public class DefectServiceImpl implements DefectService {
 
     //[巡检人员]传入要发送的缺陷
     @Override
-    public Result sendDefect(DefectEntity def) {
+    public Result sendDefect(String id) {
+        DefectEntity def = defectMapper.selectById(id);
         def.setStatus("待审核");
         defectMapper.updateById(def);
         result.setCode("200");
