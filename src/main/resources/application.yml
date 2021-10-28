@@ -5,7 +5,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
-    password: root
+    password:
 #    开启隐藏请求方法，使用RESTful风格的接口
   mvc:
     # 映射resource.static下文件，使之可以通过url地址直接访问

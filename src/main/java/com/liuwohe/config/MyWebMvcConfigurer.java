@@ -10,6 +10,6 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //配置静态资源访问相对路径
-        registry.addResourceHandler("/images/**").addResourceLocations("file:D:\\javaProject\\defect-management-system\\src\\main\\resources\\static\\assets\\images/");
+        registry.addResourceHandler("/images/**").addResourceLocations("file:E:\\JavaProject\\defect-management-system\\src\\main\\resources\\static\\assets\\images/");
     }
 }
