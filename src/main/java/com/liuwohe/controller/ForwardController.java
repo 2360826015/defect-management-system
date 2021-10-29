@@ -48,11 +48,14 @@ public class ForwardController {
     }
     //跳转到缺陷记录编辑页面（已保存\已驳回），根据缺陷报告的id返回数据
     @GetMapping("/edit/{id}")
-    public ModelAndView toDefectEditPage(@PathVariable("id") String id,ModelAndView modelAndView){
+    public ModelAndView toDefectEditPage(@PathVariable("id") String id,EmpEntity emp,ModelAndView modelAndView){
+//        根据id返回缺陷表单数据
         Result result = defectService.getDefectById(id);
         System.out.println("结果输出"+result.getMsg());
         modelAndView.addObject("success",result);
+        //审核页面跳转
         if ("获取待审核数据成功".equals(result.getMsg())){
+            modelAndView.addObject("userId",emp.getUserId());
             modelAndView.setViewName("edit-censor");
             return modelAndView;
         }

@@ -20,7 +20,7 @@ public interface DefectService {
     Result sendDefect(String id);
     //    跳转到缺陷修改页面,根据缺陷报告id返回当前缺陷数据
     Result getDefectById(String id);
-    //评定缺陷紧急程度，审核需要修复的缺陷
+    //评定缺陷紧急程度，审核缺陷问题报告
     Result censorDefect(DefectEntity def);
 
 }

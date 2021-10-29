@@ -70,9 +70,10 @@
                                         <td id="status" th:text="${r.status}"></td>
                                         <td id="urgently" th:text="${r.urgently}"></td>
                                         <td>
-                                            <button type="button" id="sendBtn" th:value="@{/user/inspection/send/}+${r.defectId}" class="btn btn-sm btn-primary sendBtn">发送</button>
-                                            <a class="btn btn-sm btn-default" th:href="@{/user/inspection/edit/}+${r.defectId}">编辑</a>
-                                            <button type="button" id="deleteBtn"  th:value="@{/user/inspection/defect/}+${r.defectId}"class="btn btn-sm btn-danger deleteBtn" >删除</button>
+                                            <form th:action="@{/user/inspection/edit/}+${r.defectId}" id="forward">
+                                                <input name="userId" hidden th:value="${success.data.userId}">
+                                                <button type="submit" class="btn btn-sm btn-default">进入审核</button>
+                                            </form>
                                         </td>
                                     </tr>
                                     </tbody>

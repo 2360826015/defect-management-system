@@ -1,6 +1,7 @@
 package com.liuwohe.controller;
 
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.liuwohe.entity.DefectEntity;
 import com.liuwohe.entity.EmpEntity;
 import com.liuwohe.entity.Result;
@@ -36,11 +37,11 @@ public class CensorController {
         return modelAndView;
     }
 
-    //查看缺陷报告，评定缺陷紧急程度，审核需要修复的缺陷
+    //查看缺陷报告，评定缺陷紧急程度，审核缺陷问题报告
     @PostMapping("/defect")
     public Result censorDefect(DefectEntity def){
+        System.out.println("Urgently更新数据为:"+def.getUrgently());
         return defectService.censorDefect(def);
     }
-
 }
 

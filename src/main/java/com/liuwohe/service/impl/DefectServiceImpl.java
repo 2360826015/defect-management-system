@@ -201,22 +201,18 @@ public class DefectServiceImpl implements DefectService {
     }
 
 
-    //[审核人员]评定缺陷紧急程度，通过缺陷审核
+    //[审核人员]评定缺陷紧急程度，审核缺陷问题报告
     @Override
     public Result censorDefect(DefectEntity def) {
-        if(def.getUrgently() == null){
-            result.setCode("400");
-            result.setMsg("请选择紧急程度");
-            return result;
-            //如果传入的状态码是0则执行驳回，否则通过审核
-        }else if("0".equals(def.getStatus())){
+        //如果传入的紧急程度状态码是0则执行驳回，缺陷报告状态置为”已驳回“，否则通过审核
+         if(def.getUrgently() == null){
             def.setStatus("已驳回");
             defectMapper.updateById(def);
             result.setCode("200");
-            result.setMsg("审核不通过！");
+            result.setMsg("驳回成功！");
             return result;
         }
-        def.setStatus("已出单");
+        def.setStatus("已审核");
         defectMapper.updateById(def);
         result.setCode("200");
         result.setMsg("审核通过！");
