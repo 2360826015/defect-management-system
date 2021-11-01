@@ -22,5 +22,8 @@ public interface DefectService {
     Result getDefectById(String id);
     //评定缺陷紧急程度，审核缺陷问题报告
     Result censorDefect(DefectEntity def);
-
+    //问题修复后发布复检任务
+    void reinspection(String id);
+    //传入id执行完成缺陷记录方法
+    Result finishDefect(String id);
 }

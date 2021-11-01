@@ -46,7 +46,7 @@ public class ForwardController {
         modelAndView.setViewName("form");
         return modelAndView;
     }
-    //跳转到缺陷记录编辑页面（已保存\已驳回），根据缺陷报告的id返回数据
+    //跳转到缺陷记录编辑页面（已保存\已驳回\待审核），根据缺陷报告的id返回数据
     @GetMapping("/edit/{id}")
     public ModelAndView toDefectEditPage(@PathVariable("id") String id,EmpEntity emp,ModelAndView modelAndView){
 //        根据id返回缺陷表单数据
@@ -59,6 +59,7 @@ public class ForwardController {
             modelAndView.setViewName("edit-censor");
             return modelAndView;
         }
+        //巡检页面跳转
         modelAndView.setViewName("edit");
         return modelAndView;
     }

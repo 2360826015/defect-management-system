@@ -29,34 +29,35 @@
                             Tables Page <small>Responsive tables</small>
                         </h1>
                     </div>
-                </div>
+                </div> 
                  <!-- /. ROW  -->
-
+               
             <div class="row">
                 <div class="col-md-12">
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                             已保存\已驳回 缺陷列表
+                             Advanced Tables
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
-                                        <tr style="font-size: 12px">
-                                            <th>缺陷填报人</th>
-                                            <th>联系电话</th>
-                                            <th>缺陷填报日期</th>
-                                            <th>巡检所属区域</th>
-                                            <th>详细位置</th>
-                                            <th>现场情况图</th>
-                                            <th>缺陷描述</th>
-                                            <th>缺陷状态</th>
-                                            <th>操作</th>
-                                        </tr>
+                                    <tr style="font-size: 12px">
+                                        <th>缺陷填报人</th>
+                                        <th>联系电话</th>
+                                        <th>缺陷填报日期</th>
+                                        <th>巡检所属区域</th>
+                                        <th>详细位置</th>
+                                        <th>现场情况图</th>
+                                        <th>缺陷描述</th>
+                                        <th>缺陷状态</th>
+                                        <th>紧急程度</th>
+                                        <th>操作</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                    <tr id="deflist" th:if="${r.status=='已保存'||r.status=='已驳回'}"  th:each="r:${result.data}">
+                                    <tr id="deflist" th:if="${r.status=='已审核'}"  th:each="r:${result.data}">
                                         <td id="username" th:text="${r.emp.username}"></td>
                                         <td id="phone" th:text="${r.phone}"></td>
                                         <td id="date" th:text="${#dates.format(r.date,'yyyy-MM-dd HH:mm')}"></td>
@@ -67,72 +68,23 @@
                                         </td>
                                         <td id="defectMsg" th:text="${r.defectMsg}"></td>
                                         <td id="status" th:text="${r.status}"></td>
+                                        <td id="urgently" th:text="${r.urgently}"></td>
                                         <td>
-                                            <button type="button" id="sendBtn" th:value="@{/user/inspection/send/}+${r.defectId}" class="btn btn-sm btn-primary sendBtn">发送</button>
-                                            <a class="btn btn-sm btn-default" th:href="@{/user/inspection/edit/}+${r.defectId}">编辑</a>
-                                            <button type="button" id="deleteBtn"  th:value="@{/user/inspection/defect/}+${r.defectId}"class="btn btn-sm btn-danger deleteBtn" >删除</button>
+                                            <form th:method="post" th:action="@{/user/censor/finish/}+${r.defectId}" id="forward">
+                                                <input name="userId" hidden th:value="${success.data.userId}">
+                                                <button type="submit" class="btn btn-sm btn-default">发布复检任务</button>
+                                            </form>
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
-
+                            
                         </div>
                     </div>
                     <!--End Advanced Tables -->
                 </div>
             </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <!-- Advanced Tables -->
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                待复检 缺陷列表
-                            </div>
-                            <div class="panel-body">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
-                                        <thead>
-                                        <tr style="font-size: 12px">
-                                            <th>缺陷填报人</th>
-                                            <th>联系电话</th>
-                                            <th>缺陷填报日期</th>
-                                            <th>巡检所属区域</th>
-                                            <th>详细位置</th>
-                                            <th>现场情况图</th>
-                                            <th>缺陷描述</th>
-                                            <th>缺陷状态</th>
-                                            <th>操作</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr th:if="${r.status=='待复检'}"  th:each="r:${result.data}">
-                                            <td  th:text="${r.emp.username}"></td>
-                                            <td  th:text="${r.phone}"></td>
-                                            <td  th:text="${#dates.format(r.date,'yyyy-MM-dd HH:mm')}"></td>
-                                            <td  th:text="${r.emp.area.areaName}"></td>
-                                            <td style="font-size: 10px"  th:text="${r.location}"></td>
-                                            <td>
-                                                <img width="200px" height="120px"  th:src="@{/images/}+${r.image}">
-                                            </td>
-                                            <td  th:text="${r.defectMsg}"></td>
-                                            <td th:text="${r.status}"></td>
-                                            <td>
-                                                <button type="button" id="sendBtn" th:value="@{/user/inspection/send/}+${r.defectId}" class="btn btn-sm btn-primary sendBtn">发送</button>
-                                                <a class="btn btn-sm btn-default" th:href="@{/user/inspection/edit/}+${r.defectId}">编辑</a><br>
-                                                <button type="button" id="finishBtn"  th:value="@{/user/inspection/defect/finish/}+${r.defectId}"class="btn btn-sm btn-success finishBtn" >复检完成</button>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                            </div>
-                        </div>
-                        <!--End Advanced Tables -->
-                    </div>
-                </div>
                 <!-- /. ROW  -->
             <div class="row">
                 <div class="col-md-6">
@@ -360,11 +312,11 @@
                 <div class="col-md-6">
                      <!--    Context Classes  -->
                     <div class="panel panel-default">
-
+                       
                         <div class="panel-heading">
                             Context Classes
                         </div>
-
+                        
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table">
@@ -427,46 +379,14 @@
      <!-- DATA TABLE SCRIPTS -->
     <script th:src="@{/assets/js/dataTables/jquery.dataTables.js}"></script>
     <script th:src="@{/assets/js/dataTables/dataTables.bootstrap.js}"></script>
-    <script>
+        <script>
             $(document).ready(function () {
                 $('#dataTables-example').dataTable();
             });
     </script>
          <!-- Custom Js -->
     <script th:src="@{/assets/js/custom-scripts.js}"></script>
-    <script type="text/javascript" th:inline="javascript">
-        //发送按钮单击事件触发表单提交
-            $(".sendBtn").click(function (){
-                $.ajax({
-                    url: $(this).val(),
-                    type: "post",
-                    success:function (res){
-                        console.log(res.code);
-                        if(res.code==="200"){
-                            alert(res.msg);
-                            window.location.href ="http://localhost:8080/user/inspection"+"/"+[[${success.getData.userId}]];
-                        }else{
-                            alert(res.msg);
-                        }
-                    }
-                })
-            });
-        //按钮单击事件触发ajax请求，完成缺陷单流程
-        $(".finishBtn").click(function (){
-            $.ajax({
-                url: $(this).val(),
-                type: "put",
-                success:function (res){
-                    console.log(res.code);
-                    if(res.code==="200"){
-                        alert(res.msg);
-                        window.location.href ="http://localhost:8080/user/inspection"+"/"+[[${success.getData.userId}]];
-                    }else{
-                        alert(res.msg);
-                    }
-                }
-            })
-        });
-    </script>
+    
+   
 </body>
 </html>

@@ -57,7 +57,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr id="deflist"  th:each="r:${result.data}">
+                                    <tr id="deflist" th:if="${r.status=='待审核'}"   th:each="r:${result.data}">
                                         <td id="username" th:text="${r.emp.username}"></td>
                                         <td id="phone" th:text="${r.phone}"></td>
                                         <td id="date" th:text="${#dates.format(r.date,'yyyy-MM-dd HH:mm')}"></td>

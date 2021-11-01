@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 
-@Controller
+@RestController
 @RequestMapping("/user/inspection")
 //巡检人员
 public class InspectionController {
@@ -43,7 +43,6 @@ public class InspectionController {
 
     //缺陷添加
     @PostMapping("/defect")
-    @ResponseBody
     public Result addDefect(DefectEntity def,@RequestParam("filepath") MultipartFile defImage) throws IOException {
         Result result = defectService.addorEditDefect(def, defImage);
         System.out.println(result);
@@ -52,7 +51,6 @@ public class InspectionController {
 
     //缺陷修改页面（已保存\待复检）
     @PutMapping("/defect")
-    @ResponseBody
     public Result editDefect(DefectEntity def,@RequestParam("filepath") MultipartFile defImage) throws IOException {
         System.out.println("文件名"+defImage.getOriginalFilename());
         return defectService.addorEditDefect(def,defImage);
@@ -60,7 +58,6 @@ public class InspectionController {
 
     //缺陷记录删除(同时删除上传的图片文件)
     @DeleteMapping("/defect/{id}")
-    @ResponseBody
     public Result deletDefect(@PathVariable("id") String id){
         System.out.println("获取id:"+id);
         return defectService.delDefect(id);
@@ -68,10 +65,15 @@ public class InspectionController {
 
     //提交缺陷报告到审核处
     @PostMapping("/send/{id}")
-    @ResponseBody
     public Result sendDefect(@PathVariable("id") String id){
         System.out.println("缺陷报告单id"+id);
         return defectService.sendDefect(id);
     }
 
+    //完成复检，更新缺陷记录状态
+    @PutMapping("/defect/finish/{id}")
+    public Result finishDefect(@PathVariable("id") String id){
+        System.out.println("传入id:"+id+"执行后结果为："+defectService.finishDefect(id));
+        return defectService.finishDefect(id);
+    }
 }

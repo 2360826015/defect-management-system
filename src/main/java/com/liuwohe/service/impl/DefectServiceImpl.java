@@ -33,29 +33,31 @@ public class DefectServiceImpl implements DefectService {
     DefectEntityMapper defectMapper;
 
     //创建mybatis-plus查询包装器
-    QueryWrapper<Object> qw = new QueryWrapper<>();
+//    QueryWrapper<Object> qw = new QueryWrapper<>();
     //引入实体类方法
     DefectEntity defect = new DefectEntity();
     //使用工具实体类存放返回信息
     Result result = new Result();
-    //保存图片的路径
-    String filePath = "E:\\JavaProject\\defect-management-system\\src\\main\\resources\\static\\assets\\images";
+    //保存图片的默认路径
+    String filePath = "D:\\JavaProject\\defect-management-system\\src\\main\\resources\\static\\assets\\images";
 
-    //传入使用者id验证是否为审核人员或者巡检人员返回缺陷列表数据
+    //[巡检/审核人员]传入使用者id验证是否为审核人员或者巡检人员返回缺陷列表数据
     @Override
     public Result getDefectList(String id) {
         Result result = new Result();
 //        根据id查询数据库
         EmpEntity emp = empMapper.selectById(id);
-//        System.out.println("查询后传入用户数据"+emp);
+        System.out.println("查询后传入用户数据"+emp);
         //如果用户角色为审核人员,则返回对应数据,否则返回失败提示
+        QueryWrapper<Object> qw = new QueryWrapper<>();
         if("censor".equals(emp.getUserRole())){
+
             result.setCode("200");
             result.setMsg("获取待审核缺陷记录成功");
 //            插入查询条件,状态为待审核时,审核人员可见
             qw.eq("status","待审核")
                     .or()
-                    .eq("status","已出单");
+                    .eq("status","已审核");
             List<DefectEntity> defList = defect.selectList(qw);
             //遍历存入员工数据、地区数据
             defList.forEach(d->{
@@ -70,13 +72,16 @@ public class DefectServiceImpl implements DefectService {
 //           插入查询条件,状态为已保存时,巡检人员可见
             qw.eq("status","已保存")
                     .or()
-                    .eq("status","已驳回");
+                    .eq("status","已驳回")
+                    .or()
+                    .eq("status","待复检");
             List<DefectEntity> defList = defect.selectList(qw);
             //遍历存入员工数据、地区数据
             defList.forEach(d->{
                 d.setEmp(empService.getUserById(d.getUserId()));
             });
             result.setData(defList);
+            System.out.println(defList);
             return result;
         }
         result.setCode("400");
@@ -84,7 +89,7 @@ public class DefectServiceImpl implements DefectService {
         return result;
     }
 
-    //[巡检人员]添加并保存一条缺陷记录
+    //[巡检/审核人员]添加并保存一条缺陷记录
     @Override
     public Result addorEditDefect(DefectEntity def, MultipartFile defImage) throws IOException {
 //        判断是否上传图片
@@ -218,5 +223,30 @@ public class DefectServiceImpl implements DefectService {
         result.setMsg("审核通过！");
         return result;
     }
+
+    //[审核人员]更改缺陷状态
+    @Override
+    public void reinspection(String id) {
+        DefectEntity def = defectMapper.selectById(id);
+        def.setStatus("待复检");
+        defectMapper.updateById(def);
+    }
+
+    //传入缺陷记录的id，更新缺陷状态，返回信息
+    @Override
+    public Result finishDefect(String id) {
+        DefectEntity def = defectMapper.selectById(id);
+        def.setStatus("已完成");
+        int i = defectMapper.updateById(def);
+        if(i==0){
+            result.setCode("400");
+            result.setMsg("操作失败！！");
+            return result;
+        }
+        result.setCode("200");
+        result.setMsg("已完成复检！！");
+        return result;
+    }
+
 
 }
