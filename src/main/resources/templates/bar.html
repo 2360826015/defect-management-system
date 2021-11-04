@@ -241,7 +241,10 @@
         <div class="sidebar-collapse">
             <ul class="nav" id="main-menu">
                 <li>
-                    <a th:if="${success.getData().userRole}==''"  th:href="@{/user/inspection/index/}+${success.getData().userId}"><i class="fa fa-dashboard"></i> 数据总览</a>
+                    <a th:if="${success.getData().userRole}=='manger'"  th:href="@{/user/inspection/statistics/}+${success.getData().userId}"><i class="fa fa-dashboard"></i> 统计总览</a>
+                </li>
+                <li>
+                    <a th:if="${success.getData().userRole}=='manger'"  th:href="@{/user/manger/statistics/}+${success.getData().userId}"><i class="fa fa-table"></i> 缺陷列表总览</a>
                 </li>
                 <li>
                     <a th:if="${success.getData().userRole}=='censor'" th:href="@{/user/censor/finish/}+${success.getData().userId}"><i class="fa fa-qrcode"></i>已审核缺陷管理</a>

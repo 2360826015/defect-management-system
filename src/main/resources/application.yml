@@ -20,7 +20,9 @@ spring:
       max-request-size: 200MB
   thymeleaf:
     cache: false
-
+#  //覆盖开启
+  main:
+    allow-bean-definition-overriding: true
 
 
 

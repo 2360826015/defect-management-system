@@ -19,20 +19,44 @@ public class ForwardController {
     EmpService empService;
     @Autowired
     DefectService defectService;
+    //封装返回结果工具
+    Result result=new Result();
 
     //跳转到主页面
     @GetMapping("/index/{id}")
     public ModelAndView toIndex(@PathVariable("id") String id,ModelAndView modelAndView){
-        Result result=new Result();
+        System.out.println("返回接收的id:"+id);
         //获取用户信息
         EmpEntity user = empService.getUserById(id);
         //封装返回结果
         result.setData(user);
+        //        获取统计信息
+        Result s = defectService.getStatistics(id);
+        System.out.println("返回的统计数据:"+s);
 //        设置返回信息
+        modelAndView.addObject("statistics",s);
         modelAndView.addObject("success",result);
         modelAndView.setViewName("index");
         return modelAndView;
     }
+
+    //跳转到数据统计页面
+    @GetMapping("/statistics/{id}")
+    public ModelAndView toStatistics(@PathVariable("id") String id,ModelAndView modelAndView){
+        //获取用户信息
+        EmpEntity user = empService.getUserById(id);
+        //封装返回结果
+        result.setData(user);
+        //        获取统计信息
+        Result s = defectService.getStatistics(id);
+        System.out.println("返回的统计数据:"+s);
+//        设置返回信息
+        modelAndView.addObject("statistics",s);
+        modelAndView.addObject("success",result);
+        modelAndView.setViewName("statistics");
+        return modelAndView;
+    }
+
 
 
     //跳转到缺陷添加页面
@@ -40,7 +64,6 @@ public class ForwardController {
     public ModelAndView toDefectAddPage(@PathVariable("id") String id, ModelAndView modelAndView){
 //        返回员工信息
         EmpEntity user = empService.getUserById(id);
-        Result result=new Result();
         result.setData(user);
         modelAndView.addObject("success",result);
         modelAndView.setViewName("form");

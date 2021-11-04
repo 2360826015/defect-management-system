@@ -1,5 +1,6 @@
 package com.liuwohe.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.liuwohe.entity.DefectEntity;
 import com.liuwohe.entity.EmpEntity;
@@ -15,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -70,11 +73,13 @@ public class DefectServiceImpl implements DefectService {
             result.setMsg("获取已保存记录成功");
 //            QueryWrapper<Object> qw = new QueryWrapper<>();
 //           插入查询条件,状态为已保存时,巡检人员可见
-            qw.eq("status","已保存")
-                    .or()
-                    .eq("status","已驳回")
-                    .or()
-                    .eq("status","待复检");
+            qw.eq("user_id",emp.getUserId())
+                    .and(q->q.eq("status","已保存")
+                            .or()
+                            .eq("status","已驳回")
+                            .or()
+                            .eq("status","待复检")
+                        );
             List<DefectEntity> defList = defect.selectList(qw);
             //遍历存入员工数据、地区数据
             defList.forEach(d->{
@@ -248,5 +253,40 @@ public class DefectServiceImpl implements DefectService {
         return result;
     }
 
+    //根据传入的用户id查询统计不同缺陷状态的数据
+    @Override
+    public Result getStatistics(String id) {
+        QueryWrapper<DefectEntity> qw = new QueryWrapper<>();
+        EmpEntity emp = empService.getUserById(id);
+//        用于存放统计的数据
+        if("manger".equals(emp.getUserRole())){
+            //获取数据后执行分类统计出需要的数据,存入返回的结果集
+            qw.select("status","count(*) numbers");
+            qw.groupBy("status");
+            List<Map<String, Object>> defMaps = defectMapper.selectMaps(qw);
+            System.out.println("defMaps"+defMaps);
+            result.setData(defMaps);
+            result.setCode("200");
+            result.setMsg("获取数据成功！！");
+            return result;
+        }
+        result.setCode("400");
+        result.setMsg("权限不足！！");
+        return result;
+    }
+
+    //或缺所有缺陷数据并返回
+    @Override
+    public Result getAll() {
+        List<DefectEntity> defList = defect.selectAll();
+        //遍历存入员工数据、地区数据
+        defList.forEach(d->{
+            d.setEmp(empService.getUserById(d.getUserId()));
+        });
+        result.setData(defList);
+        result.setCode("200");
+        result.setMsg("获取数据成功");
+        return result;
+    }
 
 }

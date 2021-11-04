@@ -26,4 +26,8 @@ public interface DefectService {
     void reinspection(String id);
     //传入id执行完成缺陷记录方法
     Result finishDefect(String id);
+    //        获取统计信息
+    Result getStatistics(String id);
+    //或缺所有缺陷数据并返回
+    Result getAll();
 }
