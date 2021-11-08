@@ -1,6 +1,8 @@
 package com.liuwohe.controller;
 
+import com.liuwohe.entity.DefectEntity;
 import com.liuwohe.entity.EmpEntity;
+import com.liuwohe.entity.Result;
 import com.liuwohe.service.EasyPoiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +22,7 @@ public class PoiController {
     @Autowired
     EasyPoiService easyPoiService;
 
-    //表格导出
+    //所有缺陷表格导出
     @GetMapping("/download")
     @ResponseBody
     public void downExcel(HttpServletResponse resp) throws IOException {
@@ -28,12 +30,30 @@ public class PoiController {
         easyPoiService.downExcel(resp);
     }
 
-    //表格导入
+    ///所有缺陷表格导入
     @PostMapping("/upload")
     @ResponseBody
-    public List<EmpEntity> uploadExcel(@RequestParam("file") MultipartFile file, HttpServletResponse resp) throws Exception {
+    public Result uploadExcel(@RequestParam("file") MultipartFile file) throws Exception {
         //导入文件进行处理，拿到返回导入结果
-        List<EmpEntity> failList = easyPoiService.uploadExcel(file,resp);
+        Result result= easyPoiService.uploadExcel(file);
+        System.out.println("导入信息为："+result);
+        return result;
+    }
+
+    //所有员工数据导出
+    @GetMapping("/empDownload")
+    @ResponseBody
+    public void empDownload(HttpServletResponse resp) throws IOException {
+        //根据条件返回查询后的表格进行导出
+        easyPoiService.empDownload(resp);
+    }
+
+    ///人员excel表格导入
+    @PostMapping("/empUpload")
+    @ResponseBody
+    public List<EmpEntity> empUpload(@RequestParam("file") MultipartFile file, HttpServletResponse resp) throws Exception {
+        //导入文件进行处理，拿到返回导入结果
+        List<EmpEntity> failList = easyPoiService.empUpload(file,resp);
         return failList;
     }
 }

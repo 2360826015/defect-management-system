@@ -261,7 +261,7 @@ public class DefectServiceImpl implements DefectService {
 //        用于存放统计的数据
         if("manger".equals(emp.getUserRole())){
             //获取数据后执行分类统计出需要的数据,存入返回的结果集
-            qw.select("status","count(*) numbers");
+            qw.select("status label","count(*) value");
             qw.groupBy("status");
             List<Map<String, Object>> defMaps = defectMapper.selectMaps(qw);
             System.out.println("defMaps"+defMaps);

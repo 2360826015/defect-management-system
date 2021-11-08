@@ -77,11 +77,14 @@
                         <div class="panel panel-primary text-center no-boder bg-color-brown">
                             <div class="panel-body">
                                 <i class="fa fa-users fa-5x"></i>
-                                <h3>36,752 </h3>
                             </div>
-                            <div class="panel-footer back-footer-brown">
-                                No. of Visits
-
+                            <div style="margin-top: 1px;font-weight: bold" class="panel-footer back-footer-brown">人员数据导入
+                                <form id="empUpload" enctype="multipart/form-data">
+                                    <input type="file" id="file" name="file" >
+                                </form>
+                            </div>
+                            <div id="empDownload" style="margin-top: 1px;font-weight: bold" class="panel-footer back-footer-brown">
+                                人员数据导出
                             </div>
                         </div>
                     </div>
@@ -251,8 +254,8 @@
     <script type="text/javascript" th:inline="javascript">
         //creating bar chart条形图
         var $barData  = [[${statistics.getData}]];
-        var xkey = "status";
-        var ykeys = ['numbers'];
+        var xkey = ['label'];
+        var ykeys = ['value'];
         var labels = ['缺陷发现量'];
         Morris.Bar({
             element: $("#morris-bar-chart-defect"),
@@ -266,16 +269,48 @@
         });
         // creating donut chart饼状图
         console.log([[${statistics.getData}]])
-        var $donutData = [
-            {label: "已审核缺陷", value: [[${statistics.getData[2].numbers}]]},
-            {label: "已完成缺陷", value: [[${statistics.getData[1].numbers}]]},
-            {label: "待审核缺陷", value: [[${statistics.getData[5].numbers}]]}
-        ];
         Morris.Donut({
             element: $("#morris-donut-chart-defect"),
-            data: $donutData,
+            data: $barData,
             resize: true, //defaulted to true
+            });
+        //点击触发表格导出事件
+        $("#empDownload").click(function (){
+            //导出表格
+            $.ajax({
+                    url: "/empDownload",
+                    method: "get",
+                    success:function (res){
+                        window.location.href='/empDownload'
+                    }
             })
+        })
+        //导入Excel表格数据
+        $("#empUpload").click(function (){
+            var files = $('#file').prop('files');
+            var data = new FormData();
+            data.append('file', files[0]);
+            $.ajax({
+                url: '/upload',
+                type: 'post',
+                data: data,
+                /**
+                 *必须false才会自动加上正确的Content-Type
+                 */
+                contentType: false,
+                /**
+                 * 必须false才会避开jQuery对 formdata 的默认处理
+                 * XMLHttpRequest会对 formdata 进行正确的处理
+                 */
+                processData: false,
+                success:function (res){
+                    console.log(res);
+                    alert("导入成功");
+                    window.location.href='/upload';
+
+                }
+            })
+        })
     </script>
 
 </body>

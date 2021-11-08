@@ -21,6 +21,7 @@ public class MangerController {
     @Autowired
     EmpService empService;
 
+    //查询所有缺陷数据并统计相关数据
     @GetMapping("/statistics/{id}")
     public ModelAndView getAllList(@PathVariable("id")String id, ModelAndView modelAndView){
         //封装返回用户数据
