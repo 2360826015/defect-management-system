@@ -42,7 +42,7 @@ public class DefectServiceImpl implements DefectService {
     //使用工具实体类存放返回信息
     Result result = new Result();
     //保存图片的默认路径
-    String filePath = "D:\\JavaProject\\defect-management-system\\src\\main\\resources\\static\\assets\\images";
+    static String filePath = "D:\\JavaProject\\defect-management-system\\src\\main\\resources\\static\\assets\\images";
 
     //[巡检/审核人员]传入使用者id验证是否为审核人员或者巡检人员返回缺陷列表数据
     @Override

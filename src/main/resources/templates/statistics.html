@@ -34,19 +34,52 @@
                         </h1>
                     </div>
                 </div>
-                <!-- /. ROW  -->
 
+
+                <div class="row">
+
+
+                    <div class="col-md-9 col-sm-12 col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                缺陷情况条形统计图
+                            </div>
+                            <div class="panel-body">
+                                <div id="morris-bar-chart-defect"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                缺陷情况饼状统计图
+                            </div>
+                            <div class="panel-body">
+                                <div id="morris-donut-chart-defect"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /. ROW  -->
                 <div class="row">
                     <div class="col-md-3 col-sm-12 col-xs-12">
                         <div class="panel panel-primary text-center no-boder bg-color-green">
                             <div class="panel-body">
                                 <i class="fa fa-bar-chart-o fa-5x"></i>
-                                <h3>8,457</h3>
+                                <h3>地区数据导入导出</h3>
                             </div>
-                            <div class="panel-footer back-footer-green">
-                                Daily Visits
-
-                            </div>
+                            <form enctype="multipart/form-data">
+                                <div style="margin-top: 1px;font-weight: bold" class="panel-footer back-footer-green">
+                                    <input type="file" id="file" name="file" style="display: inline;width: 100%">
+                                </div>
+                                <button id="areaUpload"  type="button"  class="panel-footer back-footer-green" style="font-weight: bold;border: none;margin-top: 1px;width: 100%">导入</button>
+                            </form>
+                            <button id="areaDownload" style="margin-top: 1px;font-weight: bold;width: 100%;border: none"class="panel-footer back-footer-green">
+                                导出
+                            </button>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-12 col-xs-12">
@@ -77,47 +110,21 @@
                         <div class="panel panel-primary text-center no-boder bg-color-brown">
                             <div class="panel-body">
                                 <i class="fa fa-users fa-5x"></i>
+                                <h3>人员数据导入导出</h3>
                             </div>
-                            <div style="margin-top: 1px;font-weight: bold" class="panel-footer back-footer-brown">人员数据导入
-                                <form id="empUpload" enctype="multipart/form-data">
-                                    <input type="file" id="file" name="file" >
-                                </form>
-                            </div>
-                            <div id="empDownload" style="margin-top: 1px;font-weight: bold" class="panel-footer back-footer-brown">
-                                人员数据导出
-                            </div>
+                            <form enctype="multipart/form-data">
+                                <div style="margin-top: 1px;font-weight: bold" class="panel-footer back-footer-brown">
+                                    <input type="file" id="file" name="file" style="display: inline;width: 100%">
+                                </div>
+                                <button id="empUpload"  type="button"  class="panel-footer back-footer-brown" style="font-weight: bold;border: none;margin-top: 1px;width: 100%">导入</button>
+                            </form>
+                            <button id="empDownload" style="margin-top: 1px;font-weight: bold;width: 100%;border: none" class="panel-footer back-footer-brown">
+                                导出
+                            </button>
                         </div>
                     </div>
                 </div>
 
-
-                <div class="row">
-
-
-                    <div class="col-md-9 col-sm-12 col-xs-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                缺陷情况条形统计图
-                            </div>
-                            <div class="panel-body">
-                                <div id="morris-bar-chart-defect"></div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="col-md-3 col-sm-12 col-xs-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                缺陷情况饼状统计图
-                            </div>
-                            <div class="panel-body">
-                                <div id="morris-donut-chart-defect"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
                 <!-- /. ROW  -->
 
                 <div class="row">
@@ -274,6 +281,8 @@
             data: $barData,
             resize: true, //defaulted to true
             });
+
+        //人员表
         //点击触发表格导出事件
         $("#empDownload").click(function (){
             //导出表格
@@ -291,7 +300,7 @@
             var data = new FormData();
             data.append('file', files[0]);
             $.ajax({
-                url: '/upload',
+                url: '/empUpload',
                 type: 'post',
                 data: data,
                 /**
@@ -305,9 +314,46 @@
                 processData: false,
                 success:function (res){
                     console.log(res);
-                    alert("导入成功");
-                    window.location.href='/upload';
+                    alert(res.msg);
+                    window.location.reload();
+                }
+            })
+        })
 
+        //地区表
+        //点击触发表格导出事件
+        $("#areaDownload").click(function (){
+            //导出表格
+            $.ajax({
+                url: "/areaDownload",
+                method: "get",
+                success:function (res){
+                    window.location.href='/areaDownload'
+                }
+            })
+        })
+        //导入Excel表格数据
+        $("#areaUpload").click(function (){
+            var files = $('#file').prop('files');
+            var data = new FormData();
+            data.append('file', files[0]);
+            $.ajax({
+                url: '/areaUpload',
+                type: 'post',
+                data: data,
+                /**
+                 *必须false才会自动加上正确的Content-Type
+                 */
+                contentType: false,
+                /**
+                 * 必须false才会避开jQuery对 formdata 的默认处理
+                 * XMLHttpRequest会对 formdata 进行正确的处理
+                 */
+                processData: false,
+                success:function (res){
+                    console.log(res);
+                    alert(res.msg);
+                    window.location.reload();
                 }
             })
         })

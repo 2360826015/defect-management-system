@@ -1,6 +1,7 @@
 package com.liuwohe.entity;
 
 import cn.afterturn.easypoi.excel.annotation.Excel;
+import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 import cn.afterturn.easypoi.handler.inter.IExcelDataModel;
 import cn.afterturn.easypoi.handler.inter.IExcelModel;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -43,7 +44,7 @@ public class DefectEntity extends Model<DefectEntity> implements Serializable, I
     @Excel(name = "详细定位")
     private String location;
 
-    @Excel(name = "图片路径",savePath = "D:\\JavaProject\\defect-management-system\\src\\main\\resources\\static\\assets\\images")
+    @Excel(name = "图片路径",type = 2,width = 40,height = 50,savePath = "D:\\JavaProject\\defect-management-system\\src\\main\\resources\\static\\assets\\images")
     private String image;
 
     @Excel(name = "缺陷详细描述")

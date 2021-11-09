@@ -51,9 +51,24 @@ public class PoiController {
     ///人员excel表格导入
     @PostMapping("/empUpload")
     @ResponseBody
-    public List<EmpEntity> empUpload(@RequestParam("file") MultipartFile file, HttpServletResponse resp) throws Exception {
+    public Result empUpload(@RequestParam("file") MultipartFile file) throws Exception {
         //导入文件进行处理，拿到返回导入结果
-        List<EmpEntity> failList = easyPoiService.empUpload(file,resp);
-        return failList;
+        return easyPoiService.empUpload(file);
+    }
+
+    //所有地区数据导出
+    @GetMapping("/areaDownload")
+    @ResponseBody
+    public void areaDownload(HttpServletResponse resp) throws IOException {
+        //根据条件返回查询后的表格进行导出
+        easyPoiService.areaDownload(resp);
+    }
+
+    ///人员excel表格导入
+    @PostMapping("/areaUpload")
+    @ResponseBody
+    public Result areaUpload(@RequestParam("file") MultipartFile file) throws Exception {
+        //导入文件进行处理，拿到返回导入结果
+        return easyPoiService.areaUpload(file);
     }
 }

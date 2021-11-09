@@ -41,7 +41,7 @@
                             <button id="download" class="btn btn-sm btn-success" style=" margin-left: 20px;height: 30px">导出数据</button>
                             <form style="display: inline" enctype="multipart/form-data">
                                 <input type="file" id="file" name="file" class="btn btn-sm btn-success" style="display: inline;width: 160px; margin-left: 5px;height: 30px">
-                                <button class="btn btn-sm btn-success uploadBtn" style=" margin-left: 5px;height: 30px">导入数据</button>
+                                <button type="button"  class="btn btn-sm btn-success uploadBtn" style=" margin-left: 5px;height: 30px">导入数据</button>
                             </form>
                         </div>
                         <div class="panel-body">
@@ -136,9 +136,8 @@
                 processData: false,
                 success:function (res){
                     console.log(res);
-                    alert("导入成功");
-                    window.location.href='/upload';
-
+                    alert(res.msg);
+                    window.location.reload();
                 }
             })
         })
