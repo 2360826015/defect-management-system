@@ -6,26 +6,27 @@ import com.liuwohe.entity.EmpEntity;
 import com.liuwohe.entity.Result;
 import com.liuwohe.repository.AreasEntityMapper;
 import com.liuwohe.repository.EmpEntityMapper;
-import com.liuwohe.service.AreaService;
 import com.liuwohe.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmpServiceImpl implements EmpService {
+public class EmpServiceImpl implements EmpService{
 
     @Autowired
     EmpEntityMapper empMapper;
     @Autowired
     AreasEntityMapper areasMapper;
 
+    EmpEntity em = new EmpEntity();
+    Result result = new Result();
+
+
    /* 根据登录名和密码进行验证,用户名为username，密码为phone*/
     @Override
     public Result login(EmpEntity emp) {
-        EmpEntity em = new EmpEntity();
-        Result result = new Result();
-//        根据id查询信息
         QueryWrapper<Object> qw = new QueryWrapper<>();
+//        根据id查询信息
         qw.eq("username",emp.getUsername());
         //调用实体类的方法查询username
         EmpEntity empEntity = em.selectOne(qw);
@@ -44,6 +45,18 @@ public class EmpServiceImpl implements EmpService {
         result.setCode("400");
         result.setMsg("账号不存在，请检查");
         return result;
+    }
+
+
+    //根据传入的用户名返回用户信息
+    public EmpEntity loadUserByUsername(String username) {
+        QueryWrapper<Object> qw = new QueryWrapper<>();
+        qw.eq("username",username);
+        EmpEntity user = em.selectOne(qw);
+        if (user == null) {
+            System.out.println("不存在该用户!");
+        }
+        return user;
     }
 
     //根据传入的id返回员工信息

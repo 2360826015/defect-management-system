@@ -65,12 +65,15 @@ public class EasyPoiServiceImpl implements EasyPoiService {
             List<DefectEntity> list = result.getList();
             //循环导入每一条数据
             list.forEach(l->{
+                if(l.getImage()!=null){
+                    String filename=l.getImage().substring(l.getImage().lastIndexOf("\\")+1);
+                    l.setImage(filename);
+                }
                 defMapper.insert(l);
             });
             //失败结果集
             List<DefectEntity> failList = result.getFailList();
-            //拿到导出失败的工作簿
-//            Workbook failWorkbook = result.getFailWorkbook();
+            System.out.println("/失败结果集"+failList);
             //验证是否有失败的数据
             if (result.isVerfiyFail()) {
                 //错误行

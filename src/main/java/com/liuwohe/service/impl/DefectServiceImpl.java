@@ -118,6 +118,7 @@ public class DefectServiceImpl implements DefectService {
 
             //把本地文件上传到封装上传文件位置的全路径
             defImage.transferTo(targetFile);
+//            设置更新后的文件名
             def.setImage(newFileName);
         }
 
