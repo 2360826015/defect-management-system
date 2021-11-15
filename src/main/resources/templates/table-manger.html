@@ -109,10 +109,10 @@
         //导出表格
         $("#download").click(function (){
             $.ajax({
-                url: "/download",
+                url: "/user/manger/download",
                 method: "get",
                 success:function (res){
-                    window.location.href='/download'
+                    window.location.href='/user/manger/download'
                 }
             })
         })
@@ -122,7 +122,7 @@
             var data = new FormData();
             data.append('file', files[0]);
             $.ajax({
-                url: '/upload',
+                url: '/user/manger/upload',
                 type: 'post',
                 data: data,
                 /**

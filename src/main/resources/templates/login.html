@@ -43,7 +43,7 @@
             <div class="iconhny">
                <span class="fa fa-user-plus"></span>
              </div>
-            <form id="loginFom" th:action="@{/login}" th:method="get" class="register-form">
+            <form id="loginFom" th:action="@{/user/login}" th:method="post" class="register-form">
                 <fieldset>
                     <div class="form">
                         <div class="form-row">
@@ -59,7 +59,7 @@
                         <div class="form-row">
                             <span class="fa fa-lock"></span>
                             
-                            <input type="password" name="phone" class="form-text" placeholder="密码" required="">
+                            <input type="password" name="password" class="form-text" placeholder="密码" required="">
                         </div>
                         <span style="font-size: 16px;color: red" th:text="${error}" aria-describedby="basic-addon0"></span>
                         <div class="form-row button-login">

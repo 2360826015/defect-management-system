@@ -24,23 +24,18 @@ public class EmpServiceImpl implements EmpService{
 
    /* 根据登录名和密码进行验证,用户名为username，密码为phone*/
     @Override
-    public Result login(EmpEntity emp) {
+    public Result login(String username) {
         QueryWrapper<Object> qw = new QueryWrapper<>();
 //        根据id查询信息
-        qw.eq("username",emp.getUsername());
+        qw.eq("username",username);
         //调用实体类的方法查询username
         EmpEntity empEntity = em.selectOne(qw);
         if (empEntity!=null){
 //            验证密码
-            if(emp.getPhone().equals(empEntity.getPhone())){
                 result.setData(empEntity);
                 result.setCode("200");
                 result.setMsg("登录成功");
                 return result;
-            }
-            result.setCode("400");
-            result.setMsg("密码错误，请检查");
-            return result;
         }
         result.setCode("400");
         result.setMsg("账号不存在，请检查");
