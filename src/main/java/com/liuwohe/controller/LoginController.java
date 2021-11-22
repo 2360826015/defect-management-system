@@ -28,6 +28,7 @@ public class LoginController {
     @GetMapping("/login")
     public ModelAndView userLogin(Authentication authentication, ModelAndView modelAndView){
         // 获取登陆成功后的用户名，查询用户信息并封装结果返回
+        //SecurityContextHolder.getContext().getAuthentication().getName();
         String username = authentication.getName();
         System.out.println("emp:::"+username);
         //调用登录方法，验证后返回消息和用户信息

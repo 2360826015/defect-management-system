@@ -11,13 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Configuration
 @EnableWebSecurity
 public class SecuriyConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MyUserDetils myUserDetils;
-
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -35,7 +33,7 @@ public class SecuriyConfig extends WebSecurityConfigurerAdapter {
                     .formLogin()//使用表单认证方式
                     .loginPage("/index")//自定义的登录页面
                     .loginProcessingUrl("/user/login") //接收登录请求的路径
-                    .defaultSuccessUrl("/login")
+                    .defaultSuccessUrl("/login") //登录成功默认页面
                     .permitAll()
                     .and()
                     .csrf().disable();

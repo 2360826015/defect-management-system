@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @MapperScan("com.liuwohe.repository")
 public class DefectManagementSystemApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(DefectManagementSystemApplication.class, args);
     }

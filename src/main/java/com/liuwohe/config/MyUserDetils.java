@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-//自定义登录校验
+//自定义登录简单校验
 @Service
 public class MyUserDetils implements UserDetailsService {
     @Autowired
