@@ -24,6 +24,7 @@
 
 <h4>三、开发流程简介：</h4><br>
 1.项目需求分析，确定系统功能及结构，完成数据模型建立，数据库表设计
+![Image](https://obohe.com/i/2021/11/22/qnefup.png)
 
 2.在resources文件夹下创建application.yml文件，配置数据源，开启隐藏请求方法，使用RESTful风格的接口。
 
